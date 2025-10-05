@@ -1,9 +1,9 @@
+const serverless = require("serverless-http");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 9000;
 
 // CORS configuration
 app.use(
@@ -16,6 +16,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Health route
 app.get("/health", (req, res) => {
@@ -37,7 +38,16 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Health endpoint available at: http://localhost:${PORT}/health`);
-});
+// Export the handler for Lambda
+module.exports.handler = serverless(app);
+
+// For local development
+if (require.main === module) {
+  const PORT = process.env.PORT || 9000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(
+      `Health endpoint available at: http://localhost:${PORT}/health`
+    );
+  });
+}
