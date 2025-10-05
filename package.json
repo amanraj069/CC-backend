@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Serverless Shopping Cart Backend",
   "license": "ISC",
   "author": "",
   "type": "commonjs",
@@ -9,13 +9,20 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "serverless deploy",
+    "seed": "node scripts/seedDatabase.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^5.1.0",
-    "serverless-http": "^4.0.0"
+    "serverless-http": "^4.0.0",
+    "mongodb": "^6.3.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "joi": "^17.11.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

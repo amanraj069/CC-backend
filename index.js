@@ -3,6 +3,15 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+// Import database connection
+const { connectDB } = require("./config/database");
+
+// Import routes
+const authRoutes = require("./routes/auth");
+const productRoutes = require("./routes/products");
+const cartRoutes = require("./routes/cart");
+const orderRoutes = require("./routes/orders");
+
 const app = express();
 
 // CORS configuration
@@ -15,12 +24,33 @@ app.use(
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Session-ID"],
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// Initialize database connection
+let dbConnected = false;
+
+const initializeDB = async () => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+      console.log("Database connected successfully");
+    } catch (error) {
+      console.error("Database connection failed:", error);
+    }
+  }
+};
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  await initializeDB();
+  next();
+});
 
 // Health route
 app.get("/health", (req, res) => {
@@ -30,15 +60,47 @@ app.get("/health", (req, res) => {
   );
   res.json({
     success: true,
-    data: "Backend is running properly",
+    data: "Shopping Cart Backend is running properly",
+    database: dbConnected ? "connected" : "disconnected",
   });
 });
 
-// Add a simple root route for testing
+// API routes
+app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
+
+// Root route
 app.get("/", (req, res) => {
   res.json({
-    message: "Backend server is running",
-    endpoints: ["/health"],
+    message: "Shopping Cart Backend API",
+    version: "1.0.0",
+    endpoints: {
+      health: "/health",
+      auth: "/api/auth",
+      products: "/api/products",
+      cart: "/api/cart",
+      orders: "/api/orders",
+    },
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+    error: process.env.NODE_ENV === "development" ? err.message : undefined,
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Endpoint not found",
   });
 });
 
@@ -48,10 +110,19 @@ module.exports.handler = serverless(app);
 // For local development
 if (require.main === module) {
   const PORT = process.env.PORT || 9000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(
-      `Health endpoint available at: http://localhost:${PORT}/health`
-    );
-  });
+
+  const startServer = async () => {
+    await initializeDB();
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Shopping Cart Backend running on port ${PORT}`);
+      console.log(`📱 Health endpoint: http://localhost:${PORT}/health`);
+      console.log(`🛍️  API endpoints: http://localhost:${PORT}/api`);
+      console.log(
+        `🗄️  Database: ${dbConnected ? "✅ Connected" : "❌ Disconnected"}`
+      );
+    });
+  };
+
+  startServer().catch(console.error);
 }

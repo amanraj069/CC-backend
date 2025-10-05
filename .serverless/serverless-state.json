@@ -105,7 +105,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-eu-north-1-3a93ad1d-2293",
-                "S3Key": "serverless/your-express-api/dev/1759665281653-2025-10-05T11:54:41.653Z/your-express-api.zip"
+                "S3Key": "serverless/your-express-api/dev/1759665400742-2025-10-05T11:56:40.742Z/your-express-api.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs18.x",
@@ -123,14 +123,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionfel7DKKeSSYxFKjuiEOAuKuBvtIT8YjN2vAGzaLgw": {
+          "AppLambdaVersionq5ebh5S5sJLxuEGjo18IiMUlTc7SLpNshYnvRNhXGg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "IUcfkyOv3P/v0rgkBgdWBeDfQ8WM6xv0Wa/TAlsWxnc="
+              "CodeSha256": "V9yzxI3clq74ux85RIDyQiXRL8HBuLRsdZPDIfV+8wk="
             }
           },
           "ApiGatewayRestApi": {
@@ -348,7 +348,7 @@
               "AppLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1759665271828": {
+          "ApiGatewayDeployment1759665392210": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -411,7 +411,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionfel7DKKeSSYxFKjuiEOAuKuBvtIT8YjN2vAGzaLgw"
+              "Ref": "AppLambdaVersionq5ebh5S5sJLxuEGjo18IiMUlTc7SLpNshYnvRNhXGg"
             },
             "Export": {
               "Name": "sls-your-express-api-dev-AppLambdaFunctionQualifiedArn"
@@ -507,7 +507,7 @@
         "timeout": 30,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionfel7DKKeSSYxFKjuiEOAuKuBvtIT8YjN2vAGzaLgw"
+        "versionLogicalId": "AppLambdaVersionq5ebh5S5sJLxuEGjo18IiMUlTc7SLpNshYnvRNhXGg"
       }
     },
     "configValidationMode": "warn",
@@ -527,7 +527,7 @@
     "artifact": "/Users/amanraj/Downloads/VS Code/React Milestone/backend/.serverless/your-express-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/your-express-api/dev/1759665281653-2025-10-05T11:54:41.653Z",
+    "artifactDirectoryName": "serverless/your-express-api/dev/1759665400742-2025-10-05T11:56:40.742Z",
     "artifact": "your-express-api.zip"
   }
 }
