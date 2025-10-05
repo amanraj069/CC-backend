@@ -7,6 +7,11 @@ provider:
   region: eu-north-1
   memorySize: 128
   timeout: 30
+  environment:
+    NODE_ENV: production
+    DB_URL: mongodb+srv://amanraj3567:Passw0rd@cccluster.e3htq0d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+    JWT_SECRET: your_jwt_secret_key
+    FRONTEND_URL: https://main.d2m5w3xifxopy4.amplifyapp.com
 
 functions:
   app:
@@ -15,8 +20,28 @@ functions:
       - http:
           path: /
           method: ANY
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Session-ID
+            allowCredentials: false
       - http:
           path: /{proxy+}
           method: ANY
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - X-Session-ID
+            allowCredentials: false

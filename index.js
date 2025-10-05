@@ -17,19 +17,54 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "https://main.d2m5w3xifxopy4.amplifyapp.com",
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        "https://main.d2m5w3xifxopy4.amplifyapp.com",
+      ];
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        // For production, be more permissive
+        callback(null, true);
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Session-ID"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Session-ID",
+      "X-Requested-With",
+    ],
   })
 );
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// Handle preflight requests
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Content-Type,Authorization,X-Session-ID,X-Requested-With"
+    );
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Initialize database connection
 let dbConnected = false;
@@ -42,17 +77,31 @@ const initializeDB = async () => {
       console.log("Database connected successfully");
     } catch (error) {
       console.error("Database connection failed:", error);
+      // Don't throw error, just log it
+      dbConnected = false;
     }
   }
 };
 
-// Middleware to ensure DB connection
+// Middleware to ensure DB connection (but don't fail if DB is down)
 app.use(async (req, res, next) => {
-  await initializeDB();
+  if (!dbConnected) {
+    await initializeDB();
+  }
+
+  // Set CORS headers for all responses
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type,Authorization,X-Session-ID,X-Requested-With"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
   next();
 });
 
-// Health route
+// Health route (works without DB)
 app.get("/health", (req, res) => {
   console.log(
     "Health check requested from:",
@@ -62,6 +111,7 @@ app.get("/health", (req, res) => {
     success: true,
     data: "Shopping Cart Backend is running properly",
     database: dbConnected ? "connected" : "disconnected",
+    timestamp: new Date().toISOString(),
   });
 });
 

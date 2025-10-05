@@ -91,13 +91,21 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-eu-north-1-3a93ad1d-2293",
-          "S3Key": "serverless/your-express-api/dev/1759665400742-2025-10-05T11:56:40.742Z/your-express-api.zip"
+          "S3Key": "serverless/your-express-api/dev/1759684219191-2025-10-05T17:10:19.191Z/your-express-api.zip"
         },
         "Handler": "index.handler",
         "Runtime": "nodejs18.x",
         "FunctionName": "your-express-api-dev-app",
         "MemorySize": 128,
         "Timeout": 30,
+        "Environment": {
+          "Variables": {
+            "NODE_ENV": "production",
+            "DB_URL": "mongodb+srv://amanraj3567:Passw0rd@cccluster.e3htq0d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+            "JWT_SECRET": "your_jwt_secret_key",
+            "FRONTEND_URL": "https://main.d2m5w3xifxopy4.amplifyapp.com"
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -109,14 +117,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionq5ebh5S5sJLxuEGjo18IiMUlTc7SLpNshYnvRNhXGg": {
+    "AppLambdaVersionkAixePTA7vQTZL3aJQLurzPOtXscU5GmvjTwFax0FN4": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "V9yzxI3clq74ux85RIDyQiXRL8HBuLRsdZPDIfV+8wk="
+        "CodeSha256": "g3xL9sCAkC0v9A7F4b1poioW+Ld6C6HqW5KMOMULiyw="
       }
     },
     "ApiGatewayRestApi": {
@@ -174,7 +182,7 @@
               "StatusCode": "200",
               "ResponseParameters": {
                 "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Session-ID'",
                 "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
               },
               "ResponseTemplates": {
@@ -222,7 +230,7 @@
               "StatusCode": "200",
               "ResponseParameters": {
                 "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Session-ID'",
                 "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
               },
               "ResponseTemplates": {
@@ -334,7 +342,7 @@
         "AppLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1759665392210": {
+    "ApiGatewayDeployment1759684210464": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -397,7 +405,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionq5ebh5S5sJLxuEGjo18IiMUlTc7SLpNshYnvRNhXGg"
+        "Ref": "AppLambdaVersionkAixePTA7vQTZL3aJQLurzPOtXscU5GmvjTwFax0FN4"
       },
       "Export": {
         "Name": "sls-your-express-api-dev-AppLambdaFunctionQualifiedArn"
