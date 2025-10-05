@@ -11,7 +11,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://127.0.0.1:3000",
-      "https://xfbodnnieh.execute-api.eu-north-1.amazonaws.com/dev",
+      "https://main.d2m5w3xifxopy4.amplifyapp.com",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
